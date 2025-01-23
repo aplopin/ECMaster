@@ -400,6 +400,30 @@ void servo_on(void)
 {
     printf("Servo is enabled!\n");
 
+    slave_out_t *ptr_output[ec_slavecount];
+
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
+
+        ptr_output[i]->value_6040 = 0x0000;
+        ec_send_processdata();
+        osal_usleep(CTIME);
+
+        ptr_output[i]->value_6040 = 0x0006;
+        ec_send_processdata();
+        osal_usleep(CTIME);
+
+        ptr_output[i]->value_6040 = 0x0007;
+        ec_send_processdata();
+        osal_usleep(CTIME);
+
+        ptr_output[i]->value_6040 = 0x000F;
+        ec_send_processdata();
+        osal_usleep(CTIME);
+    }
+
+/*
     slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
 
     ptr_output->value_6040 = 0x0000;
@@ -417,17 +441,30 @@ void servo_on(void)
     ptr_output->value_6040 = 0x000F;
     ec_send_processdata();
     osal_usleep(CTIME);
+*/
 }
 
 void servo_off(void)
 {
     printf("Servo is disabled!\n");
 
+    slave_out_t *ptr_output[ec_slavecount];
+
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
+
+        ptr_output[i]->value_6040 = 0x0000;
+        ec_send_processdata();
+        osal_usleep(CTIME);
+    }
+/*
     slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
 
     ptr_output->value_6040 = 0x0000;
     ec_send_processdata();
     osal_usleep(CTIME);
+*/
 }
 
 void servo_reset(void)
