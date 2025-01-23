@@ -35,7 +35,7 @@
 #define NSEC_PER_SEC 1000000000
 #define EC_TIMEOUTMON 500
 #define stack64k (64 * 1024)
-#define CTIME 1000
+#define CTIME 500
 
 char IOmap[4096];
 ec_ODlistt ODlist;
