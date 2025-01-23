@@ -1,0 +1,7 @@
+build/
+
+#Esclude all file with extension .user
+*.user
+
+#Exclude SOEM project from tracking
+SOEM/
