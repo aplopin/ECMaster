@@ -57,7 +57,7 @@ uint8 currentgroup = 0;
 
 bool start_flag = 0;
 bool servo_enable_flag = 0;
-char ifname[] = {"enx00e04c6800db"};
+char ifname[] = {"eno1"};
 
 typedef struct PACKED
 {
