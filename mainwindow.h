@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QThread>
 #include <QObject>
-#include <iostream>
 #include "tpdoobject.h"
 
 QT_BEGIN_NAMESPACE
