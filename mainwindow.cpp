@@ -36,7 +36,7 @@
 #define NSEC_PER_SEC 1000000000
 #define EC_TIMEOUTMON 500
 #define stack64k (64 * 1024)
-#define CTIME 1000
+#define CTIME 500
 
 char IOmap[4096];
 ec_ODlistt ODlist;
@@ -58,7 +58,7 @@ uint8 currentgroup = 0;
 
 bool start_flag = 0;
 bool servo_enable_flag = 0;
-char ifname[] = {"enx00e04c6800db"};
+char ifname[] = {"eno1"};
 
 typedef struct PACKED
 {
