@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>890</width>
-    <height>638</height>
+    <width>1154</width>
+    <height>793</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -28,7 +28,7 @@
      <rect>
       <x>10</x>
       <y>90</y>
-      <width>870</width>
+      <width>985</width>
       <height>219</height>
      </rect>
     </property>
@@ -40,13 +40,13 @@
     </property>
     <property name="minimumSize">
      <size>
-      <width>870</width>
+      <width>985</width>
       <height>219</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>870</width>
+      <width>985</width>
       <height>219</height>
      </size>
     </property>
@@ -58,7 +58,7 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>850</width>
+       <width>965</width>
        <height>179</height>
       </rect>
      </property>
@@ -70,20 +70,26 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>850</width>
+       <width>965</width>
        <height>179</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>850</width>
+       <width>965</width>
        <height>179</height>
       </size>
      </property>
      <property name="font">
       <font>
-       <pointsize>8</pointsize>
+       <pointsize>10</pointsize>
       </font>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::DefaultContextMenu</enum>
+     </property>
+     <property name="toolTip">
+      <string/>
      </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAsNeeded</enum>
@@ -91,8 +97,47 @@
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAsNeeded</enum>
      </property>
+     <property name="autoScroll">
+      <bool>false</bool>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="tabKeyNavigation">
+      <bool>false</bool>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="dragDropOverwriteMode">
+      <bool>false</bool>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="textElideMode">
+      <enum>Qt::ElideLeft</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="cornerButtonEnabled">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderHighlightSections">
+      <bool>true</bool>
+     </attribute>
      <attribute name="verticalHeaderDefaultSectionSize">
       <number>20</number>
+     </attribute>
+     <attribute name="verticalHeaderHighlightSections">
+      <bool>true</bool>
      </attribute>
     </widget>
    </widget>
@@ -347,7 +392,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>890</width>
+     <width>1154</width>
      <height>23</height>
     </rect>
    </property>

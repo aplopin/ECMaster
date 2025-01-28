@@ -1252,15 +1252,14 @@ MainWindow::MainWindow(QWidget *parent)
         ui->tableWidget->horizontalHeaderItem(i)->setBackground(Qt::red);
     }
 
-    ui->tableWidget->setColumnWidth(0, 175);
+    ui->tableWidget->setColumnWidth(0, 200);
     for(uint8_t i = 1; i < ui->tableWidget->columnCount(); i ++)
     {
-        ui->tableWidget->setColumnWidth(i, 75);
+        ui->tableWidget->setColumnWidth(i, 85);
     }
 
     ui->tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
 
     ui->tableWidget->setStyleSheet("QtableWidget {"
                                    "font: 8pt Arial;"
