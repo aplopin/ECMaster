@@ -42,6 +42,8 @@ private slots:
 
     void on_btnDecelerationWrite_clicked();
 
+    void on_btnTest1_clicked();
+
 public slots:
 
     void getValue();

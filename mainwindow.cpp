@@ -1367,6 +1367,10 @@ void MainWindow::on_btnServoON_clicked()
         //ui->btnTargetPositionWrite->setEnabled(false);
         //ui->btnMaxMotorVelocity->setEnabled(false);
         ui->btnQuickStop->setEnabled(false);
+        ui->btnTest1->setEnabled(false);
+        //ui->btnTest2->setEnabled(false);
+        //ui->btnTest3->setEnabled(false);
+        //ui->btnTest4->setEnabled(false);
 
         servo_enable_flag = false;
     }
@@ -1381,6 +1385,10 @@ void MainWindow::on_btnServoON_clicked()
         //ui->btnTargetPositionWrite->setEnabled(true);
         //ui->btnMaxMotorVelocity->setEnabled(true);
         ui->btnQuickStop->setEnabled(true);
+        ui->btnTest1->setEnabled(true);
+        //ui->btnTest2->setEnabled(true);
+        //ui->btnTest3->setEnabled(true);
+        //ui->btnTest4->setEnabled(true);
 
         servo_enable_flag = true;
     }
@@ -1446,6 +1454,26 @@ void MainWindow::on_btnReset_clicked()
     servo_reset();
 }
 
+void MainWindow::on_btnTest1_clicked()
+{
+    set_operation_mode(3);
+
+    set_max_motor_speed(250000);
+    set_acceleration(125000);
+    set_deceleration(125000);
+
+    // Speed task block
+    set_target_velocity(250000);
+    osal_usleep(1000000);
+    set_target_velocity(50000);
+    osal_usleep(2000000);
+    set_target_velocity(-250000);
+    osal_usleep(500000);
+    set_target_velocity(10000);
+    osal_usleep(1000000);
+    set_target_velocity(0);
+}
+
 void MainWindow::getValue()
 {
     char str[8][16] = {0};
@@ -1477,5 +1505,4 @@ void MainWindow::getValue()
         } 
     }
 }
-
 
