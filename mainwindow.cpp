@@ -37,6 +37,7 @@
 #define EC_TIMEOUTMON 500
 #define stack64k (64 * 1024)
 #define CTIME 500
+#define SERVDCOUNT 8
 
 char IOmap[4096];
 ec_ODlistt ODlist;
@@ -85,7 +86,8 @@ typedef struct PACKED
 
 } slave_in_t;
 
-slave_in_t * ptr_input[8];
+slave_in_t * ptr_input[SERVDCOUNT];
+slave_out_t * ptr_output[SERVDCOUNT];
 
 /* add ns to timespec */
 void add_timespec(struct timespec *ts, int64 addtime)
@@ -331,8 +333,14 @@ void start_server(char *ifname)
             for(uint8_t i = 0; i < ec_slavecount; i ++)
             {
                 ptr_input[i] = (slave_in_t*)ec_slave[i + 1].inputs;
+                //printf("address = %d;\n", ptr_input[i]);
+            }
 
-                printf("address = %d;\n", ptr_input[i]);
+            /* define structres slave_output_t for data output */
+            for(uint8_t i = 0; i < ec_slavecount; i ++)
+            {
+                ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
+                //printf("address = %d;\n", ptr_output[i]);
             }
 
             /* wait for all slaves to reach SAFE_OP state */
@@ -425,12 +433,8 @@ void servo_on(void)
 {
     printf("Servo is enabled!\n");
 
-    slave_out_t *ptr_output[ec_slavecount];
-
     for(int8_t i = 0; i < ec_slavecount; i ++)
     {
-        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
-
         ptr_output[i]->value_6040 = 0x0000;
     }
     ec_send_processdata();
@@ -438,8 +442,6 @@ void servo_on(void)
 
     for(int8_t i = 0; i < ec_slavecount; i ++)
     {
-        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
-
         ptr_output[i]->value_6040 = 0x0006;
     }
     ec_send_processdata();
@@ -447,8 +449,6 @@ void servo_on(void)
 
     for(int8_t i = 0; i < ec_slavecount; i ++)
     {
-        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
-
         ptr_output[i]->value_6040 = 0x0007;
     }
     ec_send_processdata();
@@ -456,8 +456,6 @@ void servo_on(void)
 
     for(int8_t i = 0; i < ec_slavecount; i ++)
     {
-        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
-
         ptr_output[i]->value_6040 = 0x000F;
     }
     ec_send_processdata();
@@ -468,12 +466,8 @@ void servo_off(void)
 {
     printf("Servo is disabled!\n");
 
-    slave_out_t *ptr_output[ec_slavecount];
-
     for(int8_t i = 0; i < ec_slavecount; i ++)
     {
-        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
-
         ptr_output[i]->value_6040 = 0x0000;
     }
     ec_send_processdata();
@@ -482,12 +476,8 @@ void servo_off(void)
 
 void servo_reset(void)
 {
-    slave_out_t *ptr_output[ec_slavecount];
-
     for(int8_t i = 0; i < ec_slavecount; i ++)
     {
-        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
-
         ptr_output[i]->value_6040 = 0x0080;
     }
     ec_send_processdata();
@@ -495,8 +485,6 @@ void servo_reset(void)
 
     for(int8_t i = 0; i < ec_slavecount; i ++)
     {
-        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
-
         ptr_output[i]->value_6040 = 0x0000;
     }
     ec_send_processdata();
@@ -505,54 +493,60 @@ void servo_reset(void)
 
 void set_target_position(int32_t target_position)
 {
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_607A = target_position;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i]->value_607A = target_position;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 }
 
 void set_max_motor_speed(int32_t max_motor_speed)
 {
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_6080 = max_motor_speed;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i]->value_6080 = max_motor_speed;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 }
 
 void set_target_velocity(int32_t target_velocity)
 {
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_60FF = target_velocity;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i]->value_60FF = target_velocity;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 }
 
 void set_operation_mode(int8_t operation_mode)
 {
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_6060 = operation_mode;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i]->value_6060 = operation_mode;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 }
 
 void set_acceleration(int32_t acceleration)
 {
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_6083 = acceleration;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i]->value_6083 = acceleration;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 }
 
 void set_deceleration(int32_t deceleration)
 {
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_6084 = deceleration;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i]->value_6084 = deceleration;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 }
@@ -561,9 +555,10 @@ void quick_stop(void)
 {
     printf("Quick Stop!\n");
 
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_6040 = 0x0002;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i]->value_6040 = 0x0002;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 }
@@ -1153,7 +1148,6 @@ void slaveinfo(char *ifname)
                     }
                 }
             }
-
 
             ec_readstate();
             for( cnt = 1 ; cnt <= ec_slavecount ; cnt++)
