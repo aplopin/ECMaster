@@ -242,21 +242,31 @@ OSAL_THREAD_FUNC ecatcheck( void *ptr )
     }
 }
 
-/*
 OSAL_THREAD_FUNC read_pdo(void)
 {
     while(1)
     {
         if(inOP == TRUE)
         {
-            printf("value_6041 - 0x%x\n", ptr_input->value_6041);
-            printf("value_6064 - %d\n", ptr_input->value_6064);
-            printf("value_606C - %d\n", ptr_input->value_606C);
-            printf("value_6077 - %d\n", ptr_input->value_6077);
-            printf("value_6062 - %d\n", ptr_input->value_6062);
-            printf("value_606B - %d\n", ptr_input->value_606B);
-            printf("value_6074 - %d\n", ptr_input->value_6074);
-            printf("value_603F - 0x%x\n\n", ptr_input->value_603F);
+            printf("Slave - 1:\n");
+            printf("value_6041 - 0x%x\n", ptr_input[0]->value_6041);
+            printf("value_6064 - %d\n", ptr_input[0]->value_6064);
+            printf("value_606C - %d\n", ptr_input[0]->value_606C);
+            printf("value_6077 - %d\n", ptr_input[0]->value_6077);
+            printf("value_6062 - %d\n", ptr_input[0]->value_6062);
+            printf("value_606B - %d\n", ptr_input[0]->value_606B);
+            printf("value_6074 - %d\n", ptr_input[0]->value_6074);
+            printf("value_603F - 0x%x\n\n", ptr_input[0]->value_603F);
+
+            printf("Slave - 2:\n");
+            printf("value_6041 - 0x%x\n", ptr_input[1]->value_6041);
+            printf("value_6064 - %d\n", ptr_input[1]->value_6064);
+            printf("value_606C - %d\n", ptr_input[1]->value_606C);
+            printf("value_6077 - %d\n", ptr_input[1]->value_6077);
+            printf("value_6062 - %d\n", ptr_input[1]->value_6062);
+            printf("value_606B - %d\n", ptr_input[1]->value_606B);
+            printf("value_6074 - %d\n", ptr_input[1]->value_6074);
+            printf("value_603F - 0x%x\n\n", ptr_input[1]->value_603F);
         }
 
         if(do_flag == 0) break;
@@ -264,7 +274,6 @@ OSAL_THREAD_FUNC read_pdo(void)
         osal_usleep(250000);
     }
 }
-*/
 
 void user_pdo_map_config(void)
 {
@@ -279,6 +288,12 @@ void user_pdo_map_config(void)
 
     retval += ec_SDOwrite(1, 0x1c12, 0x00, TRUE, sizeof(map_1c12), &map_1c12, EC_TIMEOUTSAFE);
     retval += ec_SDOwrite(1, 0x1c13, 0x00, TRUE, sizeof(map_1c13), &map_1c13, EC_TIMEOUTSAFE);
+
+    retval += ec_SDOwrite(2, 0x1c12, 0x00, TRUE, sizeof(map_1c12), &map_1c12, EC_TIMEOUTSAFE);
+    retval += ec_SDOwrite(2, 0x1c13, 0x00, TRUE, sizeof(map_1c13), &map_1c13, EC_TIMEOUTSAFE);
+
+    retval += ec_SDOwrite(3, 0x1c12, 0x00, TRUE, sizeof(map_1c12), &map_1c12, EC_TIMEOUTSAFE);
+    retval += ec_SDOwrite(3, 0x1c13, 0x00, TRUE, sizeof(map_1c13), &map_1c13, EC_TIMEOUTSAFE);
 
     //printf("Slave %d set, retval = %d\n", slave, retval);
 }
@@ -315,7 +330,9 @@ void start_server(char *ifname)
             /* define structres slave_input_t for data input */
             for(uint8_t i = 0; i < ec_slavecount; i ++)
             {
-                ptr_input[i] = (slave_in_t*)ec_slave[i].inputs;
+                ptr_input[i] = (slave_in_t*)ec_slave[i + 1].inputs;
+
+                printf("address = %d;\n", ptr_input[i]);
             }
 
             /* wait for all slaves to reach SAFE_OP state */
@@ -1231,7 +1248,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableWidget->verticalHeader()->hide();
 
     // Задание названий заголовков столбцов
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Register name" << "Adress" << "Axis1" << "Axis2" << "Axis3" << "Axis4"\
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Register name" << "Address" << "Axis1" << "Axis2" << "Axis3" << "Axis4"\
                                                << "Axis5" << "Axis6" << "Axis7" << "Axis8");
 
     // Заполнение столбца названий регистров TPDO
@@ -1311,6 +1328,12 @@ void MainWindow::on_btnStartServer_clicked()
 
         stop_server();
         //if(...) to servo_off();
+
+        for(uint8_t i = 0; i < ec_slavecount; i ++)
+        {
+            ui->tableWidget->horizontalHeaderItem(i + 2)->setBackground(Qt::yellow);
+        }
+
 
         start_flag = false;
     }
@@ -1437,6 +1460,12 @@ void MainWindow::getValue()
     {
         for(uint8_t i = 0; i < ec_slavecount; i ++)
         {
+            if(!ec_slave[i + 1].islost)
+            {
+                ui->tableWidget->horizontalHeaderItem(i + 2)->setBackground(Qt::green);
+            }
+            else ui->tableWidget->horizontalHeaderItem(i + 2)->setBackground(Qt::red);
+
             sprintf(&str[0][0], "0x%x", ptr_input[i]->value_6041);
             sprintf(&str[1][0], "%d", ptr_input[i]->value_6064);
             sprintf(&str[2][0], "%d", ptr_input[i]->value_606C);
@@ -1446,11 +1475,12 @@ void MainWindow::getValue()
             sprintf(&str[6][0], "%d", ptr_input[i]->value_6074);
             sprintf(&str[7][0], "0x%x", ptr_input[i]->value_603F);
 
-            for(uint8_t j; j < 8 ; j ++)
+            for(uint8_t j = 0; j < 8 ; j ++)
             {
-                ui->tableWidget->setItem(j, i + 3, new QTableWidgetItem(&str[i][0]));
+                ui->tableWidget->setItem(j, i + 2, new QTableWidgetItem(&str[j][0]));
+                //memset(str[j], 0, 16);
             }
-        }
+        } 
     }
 }
 
