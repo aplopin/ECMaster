@@ -85,7 +85,7 @@ typedef struct PACKED
 
 } slave_in_t;
 
-slave_in_t * ptr_input;
+slave_in_t * ptr_input[8];
 
 /* add ns to timespec */
 void add_timespec(struct timespec *ts, int64 addtime)
@@ -242,6 +242,7 @@ OSAL_THREAD_FUNC ecatcheck( void *ptr )
     }
 }
 
+/*
 OSAL_THREAD_FUNC read_pdo(void)
 {
     while(1)
@@ -263,6 +264,7 @@ OSAL_THREAD_FUNC read_pdo(void)
         osal_usleep(250000);
     }
 }
+*/
 
 void user_pdo_map_config(void)
 {
@@ -297,7 +299,7 @@ void start_server(char *ifname)
     (void) osal_thread_create(&thread2, stack64k * 4, (void *) &ecatcheck, NULL);
 
     /* create thread to read and show slave TPDO */
-    (void) osal_thread_create(&thread3, stack64k * 4, (void *) &read_pdo, NULL);
+    //(void) osal_thread_create(&thread3, stack64k * 4, (void *) &read_pdo, NULL);
 
     /* initialise SOEM, bind socket to ifname */
     if (ec_init(ifname))
@@ -309,6 +311,13 @@ void start_server(char *ifname)
             user_pdo_map_config();
 
             printf("%d slaves found and configured.\n",ec_slavecount);
+
+            /* define structres slave_input_t for data input */
+            for(uint8_t i = 0; i < ec_slavecount; i ++)
+            {
+                ptr_input[i] = (slave_in_t*)ec_slave[i].inputs;
+            }
+
             /* wait for all slaves to reach SAFE_OP state */
             ec_statecheck(0, EC_STATE_SAFE_OP,  EC_TIMEOUTSTATE);
 
@@ -377,8 +386,6 @@ void start_server(char *ifname)
     {
         printf("No socket connection on %s\nExcecute as root\n",ifname);
     }
-
-    ptr_input = (slave_in_t*)ec_slave[1].inputs;
 }
 
 void stop_server(void)
@@ -408,41 +415,36 @@ void servo_on(void)
         ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
 
         ptr_output[i]->value_6040 = 0x0000;
-        ec_send_processdata();
-        osal_usleep(CTIME);
+    }
+    ec_send_processdata();
+    osal_usleep(CTIME);
+
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
 
         ptr_output[i]->value_6040 = 0x0006;
-        ec_send_processdata();
-        osal_usleep(CTIME);
+    }
+    ec_send_processdata();
+    osal_usleep(CTIME);
+
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
 
         ptr_output[i]->value_6040 = 0x0007;
-        ec_send_processdata();
-        osal_usleep(CTIME);
+    }
+    ec_send_processdata();
+    osal_usleep(CTIME);
+
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
 
         ptr_output[i]->value_6040 = 0x000F;
-        ec_send_processdata();
-        osal_usleep(CTIME);
     }
-
-/*
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_6040 = 0x0000;
     ec_send_processdata();
     osal_usleep(CTIME);
-
-    ptr_output->value_6040 = 0x0006;
-    ec_send_processdata();
-    osal_usleep(CTIME);
-
-    ptr_output->value_6040 = 0x0007;
-    ec_send_processdata();
-    osal_usleep(CTIME);
-
-    ptr_output->value_6040 = 0x000F;
-    ec_send_processdata();
-    osal_usleep(CTIME);
-*/
 }
 
 void servo_off(void)
@@ -456,27 +458,30 @@ void servo_off(void)
         ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
 
         ptr_output[i]->value_6040 = 0x0000;
-        ec_send_processdata();
-        osal_usleep(CTIME);
     }
-/*
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
-
-    ptr_output->value_6040 = 0x0000;
     ec_send_processdata();
     osal_usleep(CTIME);
-*/
 }
 
 void servo_reset(void)
 {
-    slave_out_t * ptr_output = (slave_out_t*)ec_slave[1].outputs;
+    slave_out_t *ptr_output[ec_slavecount];
 
-    ptr_output->value_6040 = 0x0080;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
+
+        ptr_output[i]->value_6040 = 0x0080;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 
-    ptr_output->value_6040 = 0x0000;
+    for(int8_t i = 0; i < ec_slavecount; i ++)
+    {
+        ptr_output[i] = (slave_out_t*)ec_slave[i + 1].outputs;
+
+        ptr_output[i]->value_6040 = 0x0000;
+    }
     ec_send_processdata();
     osal_usleep(CTIME);
 }
@@ -1218,15 +1223,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Задание дополнительных свойств таблицы вывода данных
+    // Задание свойств таблицы вывода данных PDO
     ui->tableWidget->setRowCount(8);
     ui->tableWidget->setColumnCount(10);
+
+    // Отключение отображение заголовков строк
     ui->tableWidget->verticalHeader()->hide();
 
+    // Задание названий заголовков столбцов
     ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Register name" << "Adress" << "Axis1" << "Axis2" << "Axis3" << "Axis4"\
                                                << "Axis5" << "Axis6" << "Axis7" << "Axis8");
 
-    // Заполнение столбца названий регистров
+    // Заполнение столбца названий регистров TPDO
     ui->tableWidget->setItem(0, 0, new QTableWidgetItem("Status Word (-)"));
     ui->tableWidget->setItem(1, 0, new QTableWidgetItem("Actual Position (Unit)"));
     ui->tableWidget->setItem(2, 0, new QTableWidgetItem("Actual Velocity (Unit/s)"));
@@ -1236,7 +1244,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableWidget->setItem(6, 0, new QTableWidgetItem("Torque Command Value (0.1%)"));
     ui->tableWidget->setItem(7, 0, new QTableWidgetItem("Error Code (-)"));
 
-    // Заполнение адресов регистров
+    // Заполнение адресов регистров TPDO
     ui->tableWidget->setItem(0, 1, new QTableWidgetItem("0x6041 - 00h"));
     ui->tableWidget->setItem(1, 1, new QTableWidgetItem("0x60B0 - 00h"));
     ui->tableWidget->setItem(2, 1, new QTableWidgetItem("0x606C - 00h"));
@@ -1252,20 +1260,16 @@ MainWindow::MainWindow(QWidget *parent)
         ui->tableWidget->horizontalHeaderItem(i)->setBackground(Qt::red);
     }
 
+    // Определение размеров столбцов. Размер строк определен в mainwindow.ui
     ui->tableWidget->setColumnWidth(0, 200);
     for(uint8_t i = 1; i < ui->tableWidget->columnCount(); i ++)
     {
         ui->tableWidget->setColumnWidth(i, 85);
     }
 
+    // Отключения прокрутки ScrollBar по горизонтали и вертикали
     ui->tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    ui->tableWidget->setStyleSheet("QtableWidget {"
-                                   "font: 8pt Arial;"
-                                   "width: 75px;"
-                                   "height: 20px;"
-                                   "}");
 
     // Запуск метода run() осуществляется по сигналу запуска от соответствующего потока
     connect(&thread_TPDO, &QThread::started, &TPDO_object, &TPDOObject::run);
@@ -1431,18 +1435,21 @@ void MainWindow::getValue()
 
     if(inOP)
     {
-        sprintf(&str[0][0], "0x%x", ptr_input->value_6041);
-        sprintf(&str[1][0], "%d", ptr_input->value_6064);
-        sprintf(&str[2][0], "%d", ptr_input->value_606C);
-        sprintf(&str[3][0],"%d", ptr_input->value_6077);
-        sprintf(&str[4][0],"%d", ptr_input->value_6062);
-        sprintf(&str[5][0],"%d", ptr_input->value_606B);
-        sprintf(&str[6][0],"%d", ptr_input->value_6074);
-        sprintf(&str[7][0],"0x%x", ptr_input->value_603F);
-
-        for(uint8_t i; i < 8 ; i ++)
+        for(uint8_t i = 0; i < ec_slavecount; i ++)
         {
-            ui->tableWidget->setItem(i, 1, new QTableWidgetItem(&str[i][0]));
+            sprintf(&str[0][0], "0x%x", ptr_input[i]->value_6041);
+            sprintf(&str[1][0], "%d", ptr_input[i]->value_6064);
+            sprintf(&str[2][0], "%d", ptr_input[i]->value_606C);
+            sprintf(&str[3][0], "%d", ptr_input[i]->value_6077);
+            sprintf(&str[4][0], "%d", ptr_input[i]->value_6062);
+            sprintf(&str[5][0], "%d", ptr_input[i]->value_606B);
+            sprintf(&str[6][0], "%d", ptr_input[i]->value_6074);
+            sprintf(&str[7][0], "0x%x", ptr_input[i]->value_603F);
+
+            for(uint8_t j; j < 8 ; j ++)
+            {
+                ui->tableWidget->setItem(j, i + 3, new QTableWidgetItem(&str[i][0]));
+            }
         }
     }
 }
