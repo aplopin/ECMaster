@@ -46,7 +46,7 @@ boolean printSDO = FALSE;
 boolean printMAP = FALSE;
 char usdo[128];
 
-pthread_t thread1, thread2, thread3;
+pthread_t thread1, thread2, thread3, thread4;
 int dorun = 0;
 int do_flag = 1;
 int64 toff, gl_delta;
@@ -59,6 +59,7 @@ uint8 currentgroup = 0;
 
 bool start_flag = 0;
 bool servo_enable_flag = 0;
+bool test1_flag = 0;
 char ifname[] = {"eno1"};
 
 typedef struct PACKED
@@ -1454,24 +1455,70 @@ void MainWindow::on_btnReset_clicked()
     servo_reset();
 }
 
+OSAL_THREAD_FUNC test1_func(void)
+{
+    while(1)
+    {
+        if(test1_flag == 1)
+        {
+            set_operation_mode(3);
+
+            set_max_motor_speed(250000);
+            set_acceleration(125000);
+            set_deceleration(125000);
+
+            // Speed task block
+            set_target_velocity(250000);
+            osal_usleep(2000000);
+            set_target_velocity(0);
+            osal_usleep(2000000);
+            set_target_velocity(-250000);
+            osal_usleep(2000000);
+            set_target_velocity(0);
+            osal_usleep(2000000);
+            set_target_velocity(125000);
+            osal_usleep(1000000);
+            set_target_velocity(0);
+            osal_usleep(1000000);
+            set_target_velocity(-125000);
+            osal_usleep(1000000);
+            set_target_velocity(0);
+            osal_usleep(1000000);
+
+            set_max_motor_speed(500000);
+            set_acceleration(500000);
+            set_deceleration(500000);
+
+            set_target_velocity(500000);
+            osal_usleep(1000000);
+            set_target_velocity(0);
+            osal_usleep(1000000);
+            set_target_velocity(-500000);
+            osal_usleep(1000000);
+            set_target_velocity(0);
+            osal_usleep(1000000);
+            set_target_velocity(250000);
+            osal_usleep(500000);
+            set_target_velocity(0);
+            osal_usleep(500000);
+            set_target_velocity(-250000);
+            osal_usleep(500000);
+            set_target_velocity(0);
+            osal_usleep(500000);
+
+            test1_flag = 0;
+        }
+
+        if(test1_flag == 0) break;
+
+        osal_usleep(250000);
+    }
+}
+
 void MainWindow::on_btnTest1_clicked()
 {
-    set_operation_mode(3);
-
-    set_max_motor_speed(250000);
-    set_acceleration(125000);
-    set_deceleration(125000);
-
-    // Speed task block
-    set_target_velocity(250000);
-    osal_usleep(1000000);
-    set_target_velocity(50000);
-    osal_usleep(2000000);
-    set_target_velocity(-250000);
-    osal_usleep(500000);
-    set_target_velocity(10000);
-    osal_usleep(1000000);
-    set_target_velocity(0);
+    test1_flag = 1;
+    (void) osal_thread_create(&thread4, stack64k * 4, (void *) &test1_func, NULL);
 }
 
 void MainWindow::getValue()
@@ -1505,4 +1552,3 @@ void MainWindow::getValue()
         } 
     }
 }
-
