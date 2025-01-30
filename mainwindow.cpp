@@ -111,6 +111,7 @@ void MainWindow::on_btnStartServer_clicked()
 
 
         start_flag = false;
+        servo_enable_flag = false;
     }
     else
     {
