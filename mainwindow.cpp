@@ -96,10 +96,13 @@ void MainWindow::on_btnStartServer_clicked()
         ui->btnAccelerationWrite->setEnabled(false);
         ui->btnDecelerationWrite->setEnabled(false);
 
-        TPDO_object.setRunning(false);
+        ui->btnTest1->setEnabled(false);
 
+        TPDO_object.setRunning(false);
+        thread_TPDO.quit();
+
+        servo_off();
         stop_server();
-        //if(...) to servo_off();
 
         for(uint8_t i = 0; i < ec_slavecount; i ++)
         {
