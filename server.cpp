@@ -357,14 +357,14 @@ void start_server(const char *ifname)
             dorun = 1;
             /* wait for all slaves to reach OP state */
             ec_statecheck(0, EC_STATE_OPERATIONAL,  5 * EC_TIMEOUTSTATE);
-
+/*
             oloop = ec_slave[0].Obytes;
             if ((oloop == 0) && (ec_slave[0].Obits > 0)) oloop = 1;
             if (oloop > 8) oloop = 8;
             iloop = ec_slave[0].Ibytes;
             if ((iloop == 0) && (ec_slave[0].Ibits > 0)) iloop = 1;
             if (iloop > 8) iloop = 8;
-
+*/
             if (ec_slave[0].state == EC_STATE_OPERATIONAL)
             {
                 printf("Operational state reached for all slaves.\n");

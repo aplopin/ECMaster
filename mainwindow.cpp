@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "tab_sync_tests.h"
 #include "./ui_mainwindow.h"
 #include "QString"
 #include <QTableWidget>
@@ -11,6 +12,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    tab_sync_tests *tab_tests = new tab_sync_tests;
+    ui->tabWidget->addTab(tab_tests, "Test");
+
+    //Bui->centralwidget->layout()->addWidget(tab_tests);
+    //ui->tabWidget->addTab(new QWidget(), "Tab 4");
+    //ui->tabWidget->addTab(new QWidget(), "Tab 5");
+
 
     // Задание свойств таблицы вывода данных PDO
     ui->tableWidget->setRowCount(8);
@@ -63,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Запуск метода run() осуществляется по сигналу запуска от соответствующего потока
     connect(&thread_TPDO, &QThread::started, &TPDO_object, &TPDOObject::run);
     // Остановка потока выполняется по сигналу finished от соответствующего объекта в потоке
-    connect(&TPDO_object, &TPDOObject::finished, &thread_TPDO, &QThread::terminate);
+    connect(&TPDO_object, &TPDOObject::finished, &thread_TPDO, &QThread::quit);
 
     // Передача объекта в поток
     TPDO_object.moveToThread(&thread_TPDO);
@@ -96,10 +105,9 @@ void MainWindow::on_btnStartServer_clicked()
         ui->btnAccelerationWrite->setEnabled(false);
         ui->btnDecelerationWrite->setEnabled(false);
 
-        ui->btnTest1->setEnabled(false);
+        //ui->btnTest1->setEnabled(false);-------------------------
 
         TPDO_object.setRunning(false);
-        thread_TPDO.quit();
 
         servo_off();
         stop_server();
@@ -149,7 +157,7 @@ void MainWindow::on_btnServoON_clicked()
         //ui->btnTargetPositionWrite->setEnabled(false);
         //ui->btnMaxMotorVelocity->setEnabled(false);
         ui->btnQuickStop->setEnabled(false);
-        ui->btnTest1->setEnabled(false);
+        //ui->btnTest1->setEnabled(false);-----------------------
         //ui->btnTest2->setEnabled(false);
         //ui->btnTest3->setEnabled(false);
         //ui->btnTest4->setEnabled(false);
@@ -167,7 +175,7 @@ void MainWindow::on_btnServoON_clicked()
         //ui->btnTargetPositionWrite->setEnabled(true);
         //ui->btnMaxMotorVelocity->setEnabled(true);
         ui->btnQuickStop->setEnabled(true);
-        ui->btnTest1->setEnabled(true);
+        //ui->btnTest1->setEnabled(true);--------------------------
         //ui->btnTest2->setEnabled(true);
         //ui->btnTest3->setEnabled(true);
         //ui->btnTest4->setEnabled(true);
@@ -234,12 +242,6 @@ void MainWindow::on_btnQuickStop_clicked()
 void MainWindow::on_btnReset_clicked()
 {
     servo_reset();
-}
-
-void MainWindow::on_btnTest1_clicked()
-{
-    test1_flag = 1;
-    (void) osal_thread_create(&thread4, stack64k * 4, (void *) &test1_func, NULL);
 }
 
 void MainWindow::getValue()
