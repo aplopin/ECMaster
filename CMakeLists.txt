@@ -25,8 +25,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         tpdoobject.h
         tpdoobject.cpp
-        server.cpp
-        server.h
+        server/server.cpp
+        server/server.h
         tabs/tab_pdo_map.cpp
         tabs/tab_pdo_map.h
         tabs/tab_pdo_map.ui

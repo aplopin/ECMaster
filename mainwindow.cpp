@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QMessageBox>
 
-#include "server.h"
+#include "server/server.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
