@@ -27,8 +27,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         tpdoobject.cpp
         server.cpp
         server.h
-
-        tab_sync_tests.h tab_sync_tests.cpp tab_sync_tests.ui
+        tabs/tab_pdo_map.cpp
+        tabs/tab_pdo_map.h
+        tabs/tab_pdo_map.ui
+        tabs/tab_sync_tests.cpp
+        tabs/tab_sync_tests.h
+        tabs/tab_sync_tests.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ECMaster APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

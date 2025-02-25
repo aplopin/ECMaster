@@ -1,9 +1,11 @@
 #include "mainwindow.h"
-#include "tab_sync_tests.h"
+#include "tabs/tab_sync_tests.h"
+#include "tabs/tab_pdo_map.h"
 #include "./ui_mainwindow.h"
 #include "QString"
 #include <QTableWidget>
 #include <QObject>
+#include <QMessageBox>
 
 #include "server.h"
 
@@ -15,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     tab_sync_tests *tab_tests = new tab_sync_tests;
     ui->tabWidget->addTab(tab_tests, "Test");
+
+    tab_pdo_map *tab_pdo_preset = new tab_pdo_map;
+    ui->tabWidget->addTab(tab_pdo_preset, "PDO map");
 
     //Bui->centralwidget->layout()->addWidget(tab_tests);
     //ui->tabWidget->addTab(new QWidget(), "Tab 4");
@@ -112,6 +117,7 @@ void MainWindow::on_btnStartServer_clicked()
         servo_off();
         stop_server();
 
+
         for(uint8_t i = 0; i < ec_slavecount; i ++)
         {
             ui->tableWidget->horizontalHeaderItem(i + 2)->setBackground(Qt::yellow);
@@ -136,6 +142,8 @@ void MainWindow::on_btnStartServer_clicked()
         ui->btnDecelerationWrite->setEnabled(true);
 
         start_server(ifname);
+
+        QMessageBox::critical(this, "Server", "Server has been Sterted!");
 
         TPDO_object.setRunning(true);
         thread_TPDO.start();
@@ -191,14 +199,12 @@ void MainWindow::on_btnOperationModeWrite_clicked()
     set_operation_mode(operation_mode);
 }
 
-
 void MainWindow::on_btnMaxMotorVelocity_clicked()
 {
     int32_t max_motor_speed = ui->lineMaxMotorVelocity->text().toInt();
     qDebug() << "main window - max_motor_speed = " << max_motor_speed << "\n";
     set_max_motor_speed(max_motor_speed);
 }
-
 
 void MainWindow::on_btnTargetPositionWrite_clicked()
 {
@@ -207,8 +213,6 @@ void MainWindow::on_btnTargetPositionWrite_clicked()
     set_target_position(target_position);
 }
 
-
-
 void MainWindow::on_btnTargetVelocityWrite_clicked()
 {
     int32_t target_velocity = ui->lineTargetVelocity->text().toInt();
@@ -216,15 +220,12 @@ void MainWindow::on_btnTargetVelocityWrite_clicked()
     set_target_velocity(target_velocity);
 }
 
-
-
 void MainWindow::on_btnAccelerationWrite_clicked()
 {
     int32_t acceleration = ui->lineProfileAcceleration->text().toInt();
     qDebug() << "main window - acceleration = " << acceleration<< "\n";
     set_acceleration(acceleration);
 }
-
 
 void MainWindow::on_btnDecelerationWrite_clicked()
 {
