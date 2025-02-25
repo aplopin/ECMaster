@@ -11,7 +11,6 @@ bool TPDOObject::running() const
     return m_running;
 }
 
-// Основной метод, в котором будет выолняться полезная рыбота объекта
 void TPDOObject::run()
 {
     count = 0;

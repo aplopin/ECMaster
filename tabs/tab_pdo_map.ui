@@ -37,6 +37,19 @@
    <property name="title">
     <string>SDO map and PDO config</string>
    </property>
+   <widget class="QPushButton" name="btnSlaveinfo">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>88</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Slaveinfo</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

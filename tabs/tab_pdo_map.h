@@ -15,6 +15,9 @@ public:
     explicit tab_pdo_map(QWidget *parent = nullptr);
     ~tab_pdo_map();
 
+private slots:
+    void on_btnSlaveinfo_clicked();
+
 private:
     Ui::tab_pdo_map *ui;
 };

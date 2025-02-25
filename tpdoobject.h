@@ -7,20 +7,20 @@ class TPDOObject : public QObject
 {
     Q_OBJECT
 
-    bool m_running; // Переменная управления полезного цикла метода run()
-    int count; // Счетчик выполнения рыботы потока для контроля
+    bool m_running;
+    int count;
 
 public:
     explicit TPDOObject(QObject *parent = nullptr);
     bool running() const;
 
 signals:
-    void changedData(); // Сигнал для изменения данных
-    void finished(); // Сигнал, по которму будет завершаться поток, после завершения метода run()
+    void changedData();
+    void finished();
     void runningChanged(bool running);
 
 public slots:
-    void run(); // Метод с полезной нагрузкой, который может выполняться в цикле
+    void run();
     void setRunning(bool running);
 };
 

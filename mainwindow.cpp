@@ -15,16 +15,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Добавление и инициализация табов в mainwindow.ui
     tab_sync_tests *tab_tests = new tab_sync_tests;
     ui->tabWidget->addTab(tab_tests, "Test");
 
     tab_pdo_map *tab_pdo_preset = new tab_pdo_map;
     ui->tabWidget->addTab(tab_pdo_preset, "PDO map");
-
-    //Bui->centralwidget->layout()->addWidget(tab_tests);
-    //ui->tabWidget->addTab(new QWidget(), "Tab 4");
-    //ui->tabWidget->addTab(new QWidget(), "Tab 5");
-
 
     // Задание свойств таблицы вывода данных PDO
     ui->tableWidget->setRowCount(8);
