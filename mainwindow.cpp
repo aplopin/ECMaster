@@ -139,7 +139,7 @@ void MainWindow::on_btnStartServer_clicked()
 
         start_server(ifname);
 
-        QMessageBox::critical(this, "Server", "Server has been Sterted!");
+        //QMessageBox::warning(this, "Server", "Server has been Started!");
 
         TPDO_object.setRunning(true);
         thread_TPDO.start();

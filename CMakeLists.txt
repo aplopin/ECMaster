@@ -35,9 +35,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         tabs/tab_sync_tests.cpp
         tabs/tab_sync_tests.h
         tabs/tab_sync_tests.ui
-
-        tabs/slaveinfo/slaveinfo.cpp
-        tabs/slaveinfo/slaveinfo.h
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ECMaster APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
