@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "tabs/tab_sync_tests.h"
 #include "tabs/tab_pdo_map.h"
-#include "./ui_mainwindow.h"
+#include "src/ui_mainwindow.h"
 #include "QString"
 #include <QTableWidget>
 #include <QObject>

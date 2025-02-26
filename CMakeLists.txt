@@ -13,28 +13,30 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        src/main.cpp
+        src/mainwindow.cpp
+        src/mainwindow.h
+        src/mainwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ECMaster
         MANUAL_FINALIZATION
+
         ${PROJECT_SOURCES}
-        tpdoobject.h
-        tpdoobject.cpp
 
-        server/server.cpp
-        server/server.h
+        src/tpdoobject.h
+        src/tpdoobject.cpp
 
-        tabs/tab_pdo_map.cpp
-        tabs/tab_pdo_map.h
-        tabs/tab_pdo_map.ui
-        tabs/tab_sync_tests.cpp
-        tabs/tab_sync_tests.h
-        tabs/tab_sync_tests.ui
+        src/server/server.cpp
+        src/server/server.h
+
+        src/tabs/tab_pdo_map.cpp
+        src/tabs/tab_pdo_map.h
+        src/tabs/tab_pdo_map.ui
+        src/tabs/tab_sync_tests.cpp
+        src/tabs/tab_sync_tests.h
+        src/tabs/tab_sync_tests.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ECMaster APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -54,7 +56,7 @@ else()
     endif()
 endif()
 
-add_subdirectory(SOEM)
+add_subdirectory(include/SOEM)
 
 target_link_libraries(ECMaster PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(ECMaster PUBLIC soem)

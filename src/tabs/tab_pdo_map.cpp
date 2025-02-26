@@ -1,5 +1,5 @@
 #include "tab_pdo_map.h"
-#include "ui_tab_pdo_map.h"
+#include "./ui_tab_pdo_map.h"
 
 tab_pdo_map::tab_pdo_map(QWidget *parent)
     : QWidget(parent)

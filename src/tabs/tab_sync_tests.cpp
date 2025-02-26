@@ -1,5 +1,5 @@
 #include "tab_sync_tests.h"
-#include "ui_tab_sync_tests.h"
+#include "./ui_tab_sync_tests.h"
 //#include "server.h"
 
 tab_sync_tests::tab_sync_tests(QWidget *parent)
