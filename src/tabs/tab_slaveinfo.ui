@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>tab_pdo_map</class>
- <widget class="QWidget" name="tab_pdo_map">
+ <class>tab_slaveinfo</class>
+ <widget class="QWidget" name="tab_slaveinfo">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -47,7 +47,7 @@
     </size>
    </property>
    <property name="title">
-    <string>SDO map and PDO config</string>
+    <string>Slaveinfo and PDO map</string>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>

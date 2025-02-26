@@ -1,5 +1,5 @@
-#ifndef TAB_PDO_MAP_H
-#define TAB_PDO_MAP_H
+#ifndef TAB_SLAVEINFO_H
+#define TAB_SLAVEINFO_H
 
 #include <QWidget>
 #include <inttypes.h>
@@ -18,10 +18,10 @@
 #define ATYPE_Wop               0x20
 
 namespace Ui {
-class tab_pdo_map;
+class tab_slaveinfo;
 }
 
-class tab_pdo_map : public QWidget
+class tab_slaveinfo : public QWidget
 {
     Q_OBJECT
 
@@ -35,8 +35,8 @@ private:
     char ifbuf[1024] = {"eno1"};
 
 public:
-    explicit tab_pdo_map(QWidget *parent = nullptr);
-    ~tab_pdo_map();
+    explicit tab_slaveinfo(QWidget *parent = nullptr);
+    ~tab_slaveinfo();
 
 private:
     char* dtype2string(uint16 dtype, uint16 bitlen);
@@ -57,7 +57,7 @@ private slots:
     void on_btnClearPlain_clicked();
 
 private:
-    Ui::tab_pdo_map *ui;
+    Ui::tab_slaveinfo *ui;
 };
 
-#endif // TAB_PDO_MAP_H
+#endif // TAB_SLAVEINFO_H

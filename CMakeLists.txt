@@ -25,15 +25,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         ${PROJECT_SOURCES}
 
-        src/tpdoobject.h
-        src/tpdoobject.cpp
+        src/tables/tpdoobject.h
+        src/tables/tpdoobject.cpp
 
         src/server/server.cpp
         src/server/server.h
 
-        src/tabs/tab_pdo_map.cpp
-        src/tabs/tab_pdo_map.h
-        src/tabs/tab_pdo_map.ui
+        src/tabs/tab_slaveinfo.cpp
+        src/tabs/tab_slaveinfo.h
+        src/tabs/tab_slaveinfo.ui
         src/tabs/tab_sync_tests.cpp
         src/tabs/tab_sync_tests.h
         src/tabs/tab_sync_tests.ui

@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QThread>
 #include <QObject>
-#include "tpdoobject.h"
+#include "tables/tpdoobject.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

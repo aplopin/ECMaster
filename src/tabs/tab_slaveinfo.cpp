@@ -1,19 +1,19 @@
-#include "tab_pdo_map.h"
-#include "./ui_tab_pdo_map.h"
+#include "tab_slaveinfo.h"
+#include "./ui_tab_slaveinfo.h"
 
-tab_pdo_map::tab_pdo_map(QWidget *parent)
+tab_slaveinfo::tab_slaveinfo(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::tab_pdo_map)
+    , ui(new Ui::tab_slaveinfo)
 {
     ui->setupUi(this);
 }
 
-tab_pdo_map::~tab_pdo_map()
+tab_slaveinfo::~tab_slaveinfo()
 {
     delete ui;
 }
 
-char* tab_pdo_map::dtype2string(uint16 dtype, uint16 bitlen)
+char* tab_slaveinfo::dtype2string(uint16 dtype, uint16 bitlen)
 {
     static char str[32] = { 0 };
 
@@ -94,7 +94,7 @@ char* tab_pdo_map::dtype2string(uint16 dtype, uint16 bitlen)
     return str;
 }
 
-char* tab_pdo_map::otype2string(uint16 otype)
+char* tab_slaveinfo::otype2string(uint16 otype)
 {
     static char str[32] = { 0 };
 
@@ -115,7 +115,7 @@ char* tab_pdo_map::otype2string(uint16 otype)
     return str;
 }
 
-char* tab_pdo_map::access2string(uint16 access)
+char* tab_slaveinfo::access2string(uint16 access)
 {
     static char str[32] = { 0 };
 
@@ -129,7 +129,7 @@ char* tab_pdo_map::access2string(uint16 access)
     return str;
 }
 
-char* tab_pdo_map::SDO2string(uint16 slave, uint16 index, uint8 subidx, uint16 dtype)
+char* tab_slaveinfo::SDO2string(uint16 slave, uint16 index, uint8 subidx, uint16 dtype)
 {
     int l = sizeof(usdo) - 1, i;
     uint8 *u8;
@@ -234,7 +234,7 @@ char* tab_pdo_map::SDO2string(uint16 slave, uint16 index, uint8 subidx, uint16 d
 }
 
 /** Read PDO assign structure */
-int tab_pdo_map::si_PDOassign(uint16 slave, uint16 PDOassign, int mapoffset, int bitoffset)
+int tab_slaveinfo::si_PDOassign(uint16 slave, uint16 PDOassign, int mapoffset, int bitoffset)
 {
     uint16 idxloop, nidx, subidxloop, rdat, idx, subidx;
     uint8 subcnt;
@@ -305,7 +305,7 @@ int tab_pdo_map::si_PDOassign(uint16 slave, uint16 PDOassign, int mapoffset, int
     return bsize;
 }
 
-int tab_pdo_map::si_map_sdo(int slave)
+int tab_slaveinfo::si_map_sdo(int slave)
 {
     int wkc, rdl;
     int retVal = 0;
@@ -371,7 +371,7 @@ int tab_pdo_map::si_map_sdo(int slave)
     return retVal;
 }
 
-int tab_pdo_map::si_siiPDO(uint16 slave, uint8 t, int mapoffset, int bitoffset)
+int tab_slaveinfo::si_siiPDO(uint16 slave, uint8 t, int mapoffset, int bitoffset)
 {
     uint16 a , w, c, e, er;
     uint8 eectl;
@@ -484,7 +484,7 @@ int tab_pdo_map::si_siiPDO(uint16 slave, uint8 t, int mapoffset, int bitoffset)
     return totalsize;
 }
 
-int tab_pdo_map::si_map_sii(int slave)
+int tab_slaveinfo::si_map_sii(int slave)
 {
     int retVal = 0;
     int Tsize, outputs_bo, inputs_bo;
@@ -505,7 +505,7 @@ int tab_pdo_map::si_map_sii(int slave)
     return retVal;
 }
 
-void tab_pdo_map::si_sdo(int cnt)
+void tab_slaveinfo::si_sdo(int cnt)
 {
     int i, j;
     char str[256];
@@ -584,7 +584,7 @@ void tab_pdo_map::si_sdo(int cnt)
     }
 }
 
-void tab_pdo_map::slaveinfo(char *ifname)
+void tab_slaveinfo::slaveinfo(char *ifname)
 {
     int cnt, i, j, nSM;
     uint16 ssigen;
@@ -732,7 +732,7 @@ void tab_pdo_map::slaveinfo(char *ifname)
     }
 }
 
-void tab_pdo_map::slaveinfo_start(void)
+void tab_slaveinfo::slaveinfo_start(void)
 {
     char str[256];
     ec_adaptert * adapter = NULL;
@@ -749,20 +749,20 @@ void tab_pdo_map::slaveinfo_start(void)
     }
     ec_free_adapters(adapter);
 
-    printSDO = TRUE; printMAP = TRUE;
+    printSDO = FALSE; printMAP = TRUE;
 
     slaveinfo(ifbuf);
 }
 
 
-void tab_pdo_map::on_btnSlaveinfo_clicked()
+void tab_slaveinfo::on_btnSlaveinfo_clicked()
 {
     ui->plainTextSlaveinfo->clear();
     slaveinfo_start();
 }
 
 
-void tab_pdo_map::on_btnClearPlain_clicked()
+void tab_slaveinfo::on_btnClearPlain_clicked()
 {
     ui->plainTextSlaveinfo->clear();
 }

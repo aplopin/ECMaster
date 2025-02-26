@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "tabs/tab_sync_tests.h"
-#include "tabs/tab_pdo_map.h"
+#include "tabs/tab_slaveinfo.h"
 #include "src/ui_mainwindow.h"
 #include "QString"
 #include <QTableWidget>
@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     tab_sync_tests *tab_tests = new tab_sync_tests;
     ui->tabWidget->addTab(tab_tests, "Test");
 
-    tab_pdo_map *tab_pdo_preset = new tab_pdo_map;
-    ui->tabWidget->addTab(tab_pdo_preset, "PDO map");
+    tab_slaveinfo *tab_pdo_preset = new tab_slaveinfo;
+    ui->tabWidget->addTab(tab_pdo_preset, "Slaveinfo");
 
     // Задание свойств таблицы вывода данных PDO
     ui->tableWidget->setRowCount(8);
